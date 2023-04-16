@@ -1,0 +1,3 @@
+[submodule "stud-eng-openapi"]
+	path = stud-eng-openapi
+	url = https://github.com/stud-eng/stud-eng-openapi.git
