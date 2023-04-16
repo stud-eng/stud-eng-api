@@ -1,3 +1,6 @@
 [submodule "stud-eng-openapi"]
 	path = stud-eng-openapi
 	url = https://github.com/stud-eng/stud-eng-openapi.git
+[submodule "database"]
+	path = database
+	url = https://github.com/stud-eng/database.git
