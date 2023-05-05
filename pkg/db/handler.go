@@ -12,7 +12,7 @@ type DBHandler struct {
 }
 
 func connect(host string, port string, user string, dbName, password string) (*gorm.DB, error) {
-	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)%s?charset=utf8mb4&parseTime=True&loc=Local", user, port, host, port, dbName)
+	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, dbName)
 	conn, err := gorm.Open(mysql.Open(dns))
 	if err != nil {
 		return nil, err
@@ -21,7 +21,7 @@ func connect(host string, port string, user string, dbName, password string) (*g
 	return conn, nil
 }
 
-func New(host string, port string, user string, dbName, password string) (*DBHandler, error) {
+func New(host string, port string, user string, dbName string, password string) (*DBHandler, error) {
 	conn, err := connect(host, port, user, dbName, password)
 	if err != nil {
 		return nil, err
