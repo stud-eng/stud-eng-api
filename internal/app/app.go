@@ -24,6 +24,7 @@ func Run(conf *config.Config) error {
 		fmt.Println("app dbh error!!!!!!!!!!!!")
 		return err
 	}
+	fmt.Println("db handler created!!!!!!!!!!!!!!")
 
 	dbrepo := dbRepo.New(dbh)
 	testUC := usecase.NewTestUseCase(dbrepo)

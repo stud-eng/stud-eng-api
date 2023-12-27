@@ -3,6 +3,8 @@ package model
 import (
 
 	//validation "github.com/go-ozzo/ozzo-validation"
+	"fmt"
+
 	"github.com/stud-eng/stud-eng-api/internal/entity"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +20,8 @@ func BindTest(c *gin.Context) (*Test, error) {
 	var res Test
 
 	if err := c.BindJSON(&res); err != nil {
+		fmt.Println(res)
+		fmt.Println("bindJSon error")
 		return nil, err
 	}
 	return &res, nil

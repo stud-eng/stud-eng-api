@@ -3,19 +3,15 @@ package dbrepo
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/stud-eng/stud-eng-api/internal/entity"
 )
 
 type Test struct {
-	ID        uint32 `gorm:"primary_key"`
-	Mail      string
-	Name      string
-	Password  string
-	UpdatedAt time.Time
-	CreatedAt time.Time
-	DeletedAt time.Time
+	ID       uint32 `gorm:"primary_key"`
+	Mail     string
+	Name     string
+	Password string
 }
 
 func entityTestsFrom(tests []Test) []*entity.Test {
@@ -28,20 +24,17 @@ func entityTestsFrom(tests []Test) []*entity.Test {
 
 func (t *Test) toEntity() *entity.Test {
 	return &entity.Test{
-		ID:        t.ID,
-		Mail:      t.Mail,
-		Name:      t.Name,
-		Password:  t.Password,
-		UpdatedAt: t.UpdatedAt,
-		CreatedAt: t.CreatedAt,
-		DeletedAt: t.DeletedAt,
+		ID:       t.ID,
+		Mail:     t.Mail,
+		Name:     t.Name,
+		Password: t.Password,
 	}
 }
 
 func (repo *DBRepository) GetTests(contex context.Context) ([]*entity.Test, error) {
 	var test []Test
 	if err := repo.DBHndler.Conn.WithContext(contex).
-		Order("ID ASC").
+		Order("ID asc").
 		Find(&test).
 		Error; err != nil {
 		return nil, err
@@ -50,13 +43,14 @@ func (repo *DBRepository) GetTests(contex context.Context) ([]*entity.Test, erro
 
 }
 
+//add where id = ?
 func (repo *DBRepository) GetTest(context context.Context, id uint32) (*entity.Test, error) {
 	test := Test{
 		ID: id,
 	}
 	if err := repo.DBHndler.Conn.WithContext(context).Take(
 		&test,
-	).Error; err != nil {
+	).Where("id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return test.toEntity(), nil
@@ -66,19 +60,32 @@ func (repo *DBRepository) InsertTest(context context.Context, test *entity.Test)
 	fmt.Println("InsertTest Started!!!!!!")
 	fmt.Println("-----")
 	fmt.Println(test)
-	if err := repo.DBHndler.Conn.WithContext(context).Create(
-		&Test{
-			Mail:      test.Mail,
-			Name:      test.Name,
-			Password:  test.Password,
-			CreatedAt: test.CreatedAt,
-		},
-	).Error; err != nil {
+	if repo.DBHndler == nil {
+		fmt.Println("DBHndler is nil !!!!!")
+	}
+
+	if repo.DBHndler.Conn == nil {
+		fmt.Println("DBHndler.Conn is nil !!!!!")
+	}
+
+	if context == nil {
+		fmt.Println("context is nil !!!!!")
+	}
+
+	t := &Test{
+		ID:       0,
+		Mail:     test.Mail,
+		Name:     test.Name,
+		Password: test.Password,
+	}
+
+	if err := repo.DBHndler.Conn.WithContext(context).Create(t).Error; err != nil {
 		fmt.Println("InsertTest Error !!!!!")
 		return nil, err
 	}
 	fmt.Println("InsertTest Done!!")
-	return repo.GetTest(context, test.ID)
+	fmt.Println(t.ID)
+	return repo.GetTest(context, t.ID)
 }
 
 func (repo *DBRepository) UpdateTest(context context.Context, test *entity.Test) (*entity.Test, error) {

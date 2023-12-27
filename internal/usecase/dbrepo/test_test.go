@@ -1,31 +1,23 @@
-package dbrepo
+package dbrepo_test
 
 import (
 	"context"
 	"fmt"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/stud-eng/stud-eng-api/internal/entity"
 )
 
-var dbrepo *DBRepository
-
 func makeTestTest(t *testing.T, name string, pass string, mail string) *entity.Test {
 	t.Helper()
 	ctx := context.Background()
-	date, err := time.Parse("2006-01-02", "2022-01-01")
-	if err != nil {
-		t.Fatal(err.Error())
-	}
 
 	res, appErr := dbrepo.InsertTest(ctx,
 		&entity.Test{
-			Mail:      mail,
-			Name:      name,
-			Password:  pass,
-			CreatedAt: date,
+			Mail:     mail,
+			Name:     name,
+			Password: pass,
 		},
 	)
 
@@ -46,6 +38,7 @@ func deleteTestTest(t *testing.T, id uint32) {
 }
 
 func Test_test(t *testing.T) {
+	fmt.Println("started test")
 	ctx := context.Background()
 
 	var (
@@ -60,18 +53,18 @@ func Test_test(t *testing.T) {
 		name := fmt.Sprintf("user%d", i+1)
 		mail := fmt.Sprintf("mail%d@gmail.com", i+1)
 		password := fmt.Sprintf("password%d", i+1)
-		date, err := time.Parse("2006-01-02", "2022-01-01")
-		if err != nil {
-			t.Fatal(err.Error())
-		}
+		// //date, err := time.Parse("2006-01-02", "2022-01-01")
+		// if err != nil {
+		// 	t.Fatal(err.Error())
+		// }
 
-		test, appErr = dbrepo.InsertTest(ctx,
+		test, appErr := dbrepo.InsertTest(ctx,
 			&entity.Test{
-				Name:      name,
-				Mail:      mail,
-				Password:  password,
-				CreatedAt: date,
+				Name:     name,
+				Mail:     mail,
+				Password: password,
 			})
+		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		if appErr != nil {
 			t.Fatal(appErr)
 		}
@@ -105,6 +98,10 @@ func Test_test(t *testing.T) {
 		t.Run(td.name, func(t *testing.T) {
 			got, appErr := dbrepo.GetTests(ctx)
 			if !reflect.DeepEqual(got, td.want) {
+				for i, _ := range got {
+					fmt.Println(got[i].ID, got[i].Name, got[i].Mail, got[i].Password)
+					fmt.Println(td.want[i].ID, td.want[i].Name, td.want[i].Mail, td.want[i].Password)
+				}
 				t.Errorf("dbRepository.GetTests() got = %v, want %v", got, td.want)
 			}
 			if !reflect.DeepEqual(appErr, td.err) {
