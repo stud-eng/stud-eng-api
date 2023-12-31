@@ -21,3 +21,8 @@ $ make test-go
 ```
 $ git submodule update --remote
 ```
+
+## Lint チェック
+```
+$ golangci-lint run 
+```
