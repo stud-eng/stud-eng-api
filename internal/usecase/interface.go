@@ -13,4 +13,8 @@ type (
 		UpdateTest(context context.Context, test *entity.Test) (*entity.Test, error)
 		DeleteTest(context context.Context, id uint32) error
 	}
+
+	ScrapeRepository interface {
+		GetMeaning(context context.Context) string
+	}
 )
