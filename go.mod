@@ -1,6 +1,6 @@
 module github.com/stud-eng/stud-eng-api
 
-go 1.18
+go 1.20
 
 require (
 	github.com/ilyakaznacheev/cleanenv v1.4.2
